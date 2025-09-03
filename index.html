@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator - Simple Web Calculator App</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="A simple, beautiful calculator web app with basic arithmetic operations. Free online calculator with keyboard support.">
+    <meta name="keywords" content="calculator, online calculator, web calculator, math calculator, simple calculator">
+    <meta name="author" content="Your Name">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Simple Calculator Web App">
+    <meta property="og:description" content="A beautiful, easy-to-use online calculator with keyboard support">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/calculator/">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Simple Calculator Web App">
+    <meta name="twitter:description" content="A beautiful, easy-to-use online calculator">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeInDown 0.5s ease-out;
+        }
+
+        .calculator {
+            background: #2d2d2d;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.5s ease-out;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .display {
+            background: #444;
+            color: #fff;
+            font-size: 2.5em;
+            padding: 10px 15px;
+            text-align: right;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            min-height: 60px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 25px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #505050;
+            color: white;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .operator {
+            background: #ff9500;
+        }
+
+        .operator:hover {
+            background: #ffb143;
+        }
+
+        .equals {
+            background: #4CAF50;
+            grid-column: span 2;
+        }
+
+        .equals:hover {
+            background: #5cbf60;
+        }
+
+        .clear {
+            background: #f44336;
+        }
+
+        .clear:hover {
+            background: #ff6659;
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+
+        .footer {
+            margin-top: 30px;
+            color: white;
+            font-size: 0.9em;
+            opacity: 0.8;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .footer a:hover {
+            border-bottom-color: white;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .calculator {
+                padding: 15px;
+            }
+            
+            .display {
+                font-size: 2em;
+                padding: 8px 12px;
+            }
+            
+            button {
+                padding: 20px;
+                font-size: 1.1em;
+            }
+        }
+
+        /* Keyboard focus styles */
+        button:focus {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculator</h1>
+        <div class="calculator">
+            <div class="display" id="display">0</div>
+            <div class="buttons">
+                <button class="clear" onclick="clearDisplay()" aria-label="Clear">C</button>
+                <button onclick="appendToDisplay('/')" class="operator" aria-label="Divide">÷</button>
+                <button onclick="appendToDisplay('*')" class="operator" aria-label="Multiply">×</button>
+                <button onclick="deleteLast()" aria-label="Backspace">←</button>
+                
+                <button onclick="appendToDisplay('7')">7</button>
+                <button onclick="appendToDisplay('8')">8</button>
+                <button onclick="appendToDisplay('9')">9</button>
+                <button onclick="appendToDisplay('-')" class="operator" aria-label="Subtract">−</button>
+                
+                <button onclick="appendToDisplay('4')">4</button>
+                <button onclick="appendToDisplay('5')">5</button>
+                <button onclick="appendToDisplay('6')">6</button>
+                <button onclick="appendToDisplay('+')" class="operator" aria-label="Add">+</button>
+                
+                <button onclick="appendToDisplay('1')">1</button>
+                <button onclick="appendToDisplay('2')">2</button>
+                <button onclick="appendToDisplay('3')">3</button>
+                <button onclick="appendToDisplay('.')">.</button>
+                
+                <button onclick="appendToDisplay('0')" class="zero">0</button>
+                <button onclick="calculate()" class="equals" aria-label="Equals">=</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Press C to clear, Backspace to delete</p>
+            <p>Made with ❤️ | <a href="https://github.com/yourusername/calculator" target="_blank">View on GitHub</a></p>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentInput = '0';
+        let shouldResetDisplay = false;
+
+        function updateDisplay() {
+            display.textContent = currentInput;
+        }
+
+        function clearDisplay() {
+            currentInput = '0';
+            shouldResetDisplay = false;
+            updateDisplay();
+        }
+
+        function appendToDisplay(value) {
+            if (shouldResetDisplay && !isOperator(value)) {
+                currentInput = '0';
+                shouldResetDisplay = false;
+            }
+
+            if (currentInput === '0' && value !== '.') {
+                currentInput = value;
+            } else if (value === '.' && currentInput.includes('.')) {
+                // Prevent multiple decimals in the same number
+                let parts = currentInput.split(/[\+\-\*\/]/);
+                if (parts[parts.length - 1].includes('.')) {
+                    return;
+                }
+                currentInput += value;
+            } else {
+                // Prevent multiple consecutive operators
+                if (isOperator(value) && isOperator(currentInput[currentInput.length - 1])) {
+                    currentInput = currentInput.slice(0, -1) + value;
+                } else {
+                    currentInput += value;
+                }
+            }
+            updateDisplay();
+        }
+
+        function isOperator(char) {
+            return ['+', '-', '*', '/'].includes(char);
+        }
+
+        function deleteLast() {
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            try {
+                // Remove trailing operators before calculation
+                let expression = currentInput;
+                while (isOperator(expression[expression.length - 1])) {
+                    expression = expression.slice(0, -1);
+                }
+                
+                let result = eval(expression);
+                
+                // Handle division by zero
+                if (!isFinite(result)) {
+                    currentInput = 'Error';
+                } else {
+                    // Round to avoid floating point issues
+                    result = Math.round(result * 100000000) / 100000000;
+                    currentInput = result.toString();
+                }
+                shouldResetDisplay = true;
+            } catch (error) {
+                currentInput = 'Error';
+                shouldResetDisplay = true;
+            }
+            updateDisplay();
+        }
+
+        // Add keyboard support
+        document.addEventListener('keydown', function(event) {
+            if (event.key >= '0' && event.key <= '9') {
+                appendToDisplay(event.key);
+            } else if (event.key === '.') {
+                appendToDisplay('.');
+            } else if (event.key === '+' || event.key === '-' || event.key === '*' || event.key === '/') {
+                appendToDisplay(event.key);
+            } else if (event.key === 'Enter' || event.key === '=') {
+                calculate();
+            } else if (event.key === 'Escape' || event.key === 'c' || event.key === 'C') {
+                clearDisplay();
+            } else if (event.key === 'Backspace') {
+                deleteLast();
+            }
+        });
+
+        // Log page view (optional - replace with your analytics)
+        console.log('Calculator app loaded successfully!');
+    </script>
+</body>
+</html>
